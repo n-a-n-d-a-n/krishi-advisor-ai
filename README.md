@@ -110,55 +110,50 @@ Storage types: `home` · `warehouse` · `cold`
 
 ---
 
-## 🗂️ Project Structurekrishi-advisor-ai/
-│
-├── krishi_v2/
-│   │
-│   ├── app.py                          # Flask app — all routes & controllers
-│   ├── ai_engine.py                    # ML inference — price prediction & profit engine
-│   ├── train_models.py                 # Offline training — builds all 30 ensemble models
-│   ├── build_dataset.py                # Dataset generator — 9,000 row Maharashtra CSV
-│   ├── database.py                     # SQLite schema & seed data
-│   ├── data_fetcher.py                 # Real-time price fetch utility
-│   ├── fetch_api_data.py               # AGMARKNET / external API importer
-│   ├── requirements.txt                # Flask, scikit-learn, pandas, numpy
-│   │
-│   ├── models/
-│   │   ├── banana_model.pkl            # Trained ensemble bundle (GB + RF + Ridge)
-│   │   ├── banana_scaler.pkl           # StandardScaler for banana
-│   │   ├── banana_meta.json            # R², MAE, MAPE, seasonal indices
-│   │   ├── onion_model.pkl
-│   │   ├── onion_scaler.pkl
-│   │   ├── onion_meta.json
-│   │   ├── tomato_model.pkl
-│   │   ├── tomato_scaler.pkl
-│   │   ├── tomato_meta.json
-│   │   ├── ... (27 more crops)
-│   │   ├── _summary.json               # Aggregate stats across all 30 models
-│   │   └── training_summary.json       # Per-crop training results
-│   │
-│   ├── data/
-│   │   ├── krishi.db                   # SQLite database
-│   │   ├── maharashtra_crop_prices.csv # 9,000 rows · 30 crops · 25 years (2000–2024)
-│   │   └── large_dataset.csv           # Extended dataset used during training
-│   │
-│   ├── templates/
-│   │   ├── base.html                   # Master layout — bilingual nav, flash messages
-│   │   ├── home.html                   # Landing page
-│   │   ├── dashboard.html              # Farm dashboard — stock, sales, profit summary
-│   │   ├── advisor.html                # AI price advisor UI
-│   │   ├── stock.html                  # Inventory management
-│   │   ├── sales.html                  # Sales history
-│   │   ├── login.html
-│   │   ├── register.html
-│   │   ├── profile.html
-│   │   └── about.html
-│   │
-│   └── uploads/                        # User uploaded files (ignored by git)
-│
+## 🗂️ Project Structure
+```
+krishi-advisor-ai/
 ├── README.md
-└── KrishiAdvisor_Hackathon_Documentation.docx
-
+├── KrishiAdvisor_Hackathon_Documentation.docx
+└── krishi_v2/
+    ├── app.py
+    ├── ai_engine.py
+    ├── train_models.py
+    ├── build_dataset.py
+    ├── database.py
+    ├── data_fetcher.py
+    ├── fetch_api_data.py
+    ├── requirements.txt
+    ├── models/
+    │   ├── banana_model.pkl
+    │   ├── banana_scaler.pkl
+    │   ├── banana_meta.json
+    │   ├── onion_model.pkl
+    │   ├── onion_scaler.pkl
+    │   ├── onion_meta.json
+    │   ├── tomato_model.pkl
+    │   ├── tomato_scaler.pkl
+    │   ├── tomato_meta.json
+    │   ├── ... (27 more crops)
+    │   ├── _summary.json
+    │   └── training_summary.json
+    ├── data/
+    │   ├── krishi.db
+    │   ├── maharashtra_crop_prices.csv
+    │   └── large_dataset.csv
+    ├── templates/
+    │   ├── base.html
+    │   ├── home.html
+    │   ├── dashboard.html
+    │   ├── advisor.html
+    │   ├── stock.html
+    │   ├── sales.html
+    │   ├── login.html
+    │   ├── register.html
+    │   ├── profile.html
+    │   └── about.html
+    └── uploads/
+```
 ---
 
 ## 🚀 Getting Started
