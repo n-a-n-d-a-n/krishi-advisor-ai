@@ -3,11 +3,20 @@
 > **AI-powered crop price prediction & farm profit optimization for Maharashtra farmers**
 > Built as a Hackathon Prototype · Team of 4 · March 2026
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-krishi--advisor--ai.onrender.com-brightgreen?style=flat&logo=render)](https://krishi-advisor-ai.onrender.com)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.1.3-000000?style=flat&logo=flask)](https://flask.palletsprojects.com)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.8.0-F7931E?style=flat&logo=scikit-learn&logoColor=white)](https://scikit-learn.org)
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=flat&logo=sqlite)](https://sqlite.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+---
+
+## 🌐 Live Demo
+
+**[https://krishi-advisor-ai.onrender.com](https://krishi-advisor-ai.onrender.com)**
+
+> Note: Hosted on Render free tier — may take 30–60 seconds to wake up on first visit.
 
 ---
 
@@ -33,7 +42,11 @@ Indian farmers lose **30–40% of potential income** due to poor timing of crop 
 ## 🧠 ML Model Architecture
 
 Each of the **30 crop-specific models** is a weighted ensemble:
+
+```
 Final Price = 0.55 × GradientBoosting + 0.35 × RandomForest + 0.10 × Ridge
+```
+
 ### Key Innovation — Year-over-Year (YoY) Feature Engineering
 
 Unlike naive models that use last month's price (lag-1), KrishiAdvisor uses **same-month-last-year** as its primary predictor — because June's price this year is best predicted from June last year, not from May this year.
@@ -111,56 +124,54 @@ Storage types: `home` · `warehouse` · `cold`
 ---
 
 ## 🗂️ Project Structure
+
 ```
 krishi-advisor-ai/
+├── app.py
+├── ai_engine.py
+├── train_models.py
+├── build_dataset.py
+├── database.py
+├── data_fetcher.py
+├── fetch_api_data.py
+├── requirements.txt
+├── render.yaml
+├── vercel.json
 ├── README.md
 ├── KrishiAdvisor_Hackathon_Documentation.docx
-└── krishi_v2/
-    ├── app.py
-    ├── ai_engine.py
-    ├── train_models.py
-    ├── build_dataset.py
-    ├── database.py
-    ├── data_fetcher.py
-    ├── fetch_api_data.py
-    ├── requirements.txt
-    ├── models/
-    │   ├── banana_model.pkl
-    │   ├── banana_scaler.pkl
-    │   ├── banana_meta.json
-    │   ├── onion_model.pkl
-    │   ├── onion_scaler.pkl
-    │   ├── onion_meta.json
-    │   ├── tomato_model.pkl
-    │   ├── tomato_scaler.pkl
-    │   ├── tomato_meta.json
-    │   ├── ... (27 more crops)
-    │   ├── _summary.json
-    │   └── training_summary.json
-    ├── data/
-    │   ├── krishi.db
-    │   ├── maharashtra_crop_prices.csv
-    │   └── large_dataset.csv
-    ├── templates/
-    │   ├── base.html
-    │   ├── home.html
-    │   ├── dashboard.html
-    │   ├── advisor.html
-    │   ├── stock.html
-    │   ├── sales.html
-    │   ├── login.html
-    │   ├── register.html
-    │   ├── profile.html
-    │   └── about.html
-    └── uploads/
+├── models/
+│   ├── banana_model.pkl
+│   ├── banana_scaler.pkl
+│   ├── banana_meta.json
+│   ├── ... (27 more crops)
+│   ├── _summary.json
+│   └── training_summary.json
+├── data/
+│   ├── krishi.db
+│   ├── maharashtra_crop_prices.csv
+│   └── large_dataset.csv
+├── templates/
+│   ├── base.html
+│   ├── home.html
+│   ├── dashboard.html
+│   ├── advisor.html
+│   ├── stock.html
+│   ├── sales.html
+│   ├── login.html
+│   ├── register.html
+│   ├── profile.html
+│   └── about.html
+└── uploads/
 ```
+
 ---
 
 ## 🚀 Getting Started
+
 ```bash
 # 1. Clone the repo
 git clone https://github.com/n-a-n-d-a-n/krishi-advisor-ai.git
-cd krishi-advisor-ai/krishi_v2
+cd krishi-advisor-ai
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -205,6 +216,7 @@ Returns all 30 supported crops with Marathi names.
 | Data | Pandas 3.0.1, NumPy 2.4.3 |
 | Database | SQLite 3 |
 | Frontend | Jinja2 + Bootstrap (Marathi + English) |
+| Deployment | Render |
 
 ---
 
