@@ -12,6 +12,9 @@ app = Flask(__name__)
 app.secret_key = 'krishi-v2-secret-2024-maharashtra'
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+# Initialize DB on startup (required for Vercel)
+init_db()
+seed_price_history()
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -462,3 +465,4 @@ if __name__ == '__main__':
     print("  http://127.0.0.1:5000")
     print("=" * 60)
     app.run(debug=True, host='0.0.0.0', port=5000)
+
