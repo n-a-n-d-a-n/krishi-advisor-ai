@@ -1,0 +1,8 @@
+{
+  "avg_r2": 0.9617,
+  "avg_cv_mae": 10.82,
+  "n_models": 30,
+  "n_features": 22,
+  "real_apmc_data": "2022-2024 for onion,tomato,potato,mango,grapes,chilli,turmeric,wheat,soybean",
+  "trained_at": "2026-03-26 08:48:37"
+}

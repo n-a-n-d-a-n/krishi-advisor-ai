@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}विक्री इतिहास – KrishiAdvisor{% endblock %}
+{% block content %}
+<div class="page-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+  <div>
+    <h1><i class="bi bi-receipt me-2" style="color:var(--amber);"></i>
+      <span data-mr="विक्री इतिहास" data-en="Sales History">विक्री इतिहास</span>
+    </h1>
+    <div class="subtitle">
+      <span data-mr="एकूण नफा:" data-en="Total Profit:">एकूण नफा:</span>
+      <strong style="color:var(--green);">₹{{ '{:,.0f}'.format(total_profit) }}</strong>
+    </div>
+  </div>
+</div>
+
+{% if sales %}
+<div class="k-card">
+  <div style="overflow-x:auto;">
+    <table class="k-table">
+      <thead>
+        <tr>
+          <th data-mr="पीक" data-en="Crop">पीक</th>
+          <th data-mr="प्रमाण" data-en="Qty">प्रमाण</th>
+          <th data-mr="विक्री भाव" data-en="Sale Price">विक्री भाव</th>
+          <th data-mr="एकूण" data-en="Total">एकूण</th>
+          <th data-mr="नफा" data-en="Profit">नफा</th>
+          <th data-mr="खरेदीदार" data-en="Buyer">खरेदीदार</th>
+          <th data-mr="तारीख" data-en="Date">तारीख</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for s in sales %}
+      <tr>
+        <td><strong>{{ s.name_mr or s.name_en }}</strong></td>
+        <td>{{ s.quantity_kg | int }} kg</td>
+        <td>₹{{ s.sale_price }}/kg</td>
+        <td>₹{{ '{:,.0f}'.format(s.total_amount) }}</td>
+        <td style="font-weight:700;color:{% if s.profit >= 0 %}var(--green){% else %}var(--red){% endif %};">
+          {% if s.profit >= 0 %}+{% endif %}₹{{ '{:,.0f}'.format(s.profit) }}
+        </td>
+        <td style="font-size:.85rem;">{{ s.buyer or '–' }}</td>
+        <td style="font-size:.82rem;color:var(--muted);">{{ s.sale_date or s.created_at[:10] }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div style="text-align:center;padding:4rem;color:var(--muted);">
+  <div style="font-size:4rem;">🧾</div>
+  <p style="font-size:1rem;margin-top:1rem;font-family:'Baloo 2',cursive;" data-mr="अजून कोणतीही विक्री नाही" data-en="No sales recorded yet">अजून कोणतीही विक्री नाही</p>
+  <a href="/stock" class="btn-krishi text-decoration-none mt-2">
+    <i class="bi bi-boxes"></i>
+    <span data-mr="साठा व्यवस्थापनाकडे जा" data-en="Go to Stock">साठा व्यवस्थापनाकडे जा</span>
+  </a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}डॅशबोर्ड – KrishiAdvisor{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+{% block content %}
+<div class="page-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+  <div>
+    <h1>
+      <span data-mr="नमस्कार" data-en="Welcome">नमस्कार</span>,
+      {{ user.name }} 👋
+    </h1>
+    <div class="subtitle" data-mr="तुमचा नफा डॅशबोर्ड" data-en="Your Profit Dashboard">तुमचा नफा डॅशबोर्ड</div>
+  </div>
+  <a href="/advisor" class="btn-krishi btn-amber text-decoration-none">
+    <i class="bi bi-cpu-fill"></i>
+    <span data-mr="AI सल्ला घ्या" data-en="Get AI Advice">AI सल्ला घ्या</span>
+  </a>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#e8f5ee;font-size:1.6rem;">💰</div>
+      <div>
+        <div class="stat-val" style="color:var(--green);">₹{{ '{:,.0f}'.format(total_profit) }}</div>
+        <div class="stat-lbl" data-mr="एकूण नफा" data-en="Total Profit">एकूण नफा</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#dbeafe;font-size:1.6rem;">📦</div>
+      <div>
+        <div class="stat-val" style="color:var(--blue);">{{ active_stock }}</div>
+        <div class="stat-lbl" data-mr="सक्रिय साठा" data-en="Active Stock">सक्रिय साठा</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fff3cd;font-size:1.6rem;">🧾</div>
+      <div>
+        <div class="stat-val" style="color:var(--amber);">₹{{ '{:,.0f}'.format(total_sales) }}</div>
+        <div class="stat-lbl" data-mr="एकूण विक्री" data-en="Total Sales">एकूण विक्री</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#ede9fe;font-size:1.6rem;">🤖</div>
+      <div>
+        <div class="stat-val" style="color:#6d28d9;">{{ pred_count }}</div>
+        <div class="stat-lbl" data-mr="AI सल्ले" data-en="AI Analyses">AI सल्ले</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Monthly Profit Chart -->
+  <div class="col-md-7">
+    <div class="k-card">
+      <div class="k-card-header green">
+        <i class="bi bi-bar-chart-fill"></i>
+        <span data-mr="मासिक नफा" data-en="Monthly Profit">मासिक नफा</span>
+      </div>
+      <div class="k-card-body">
+        <canvas id="monthlyChart" style="max-height:200px;"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Stock -->
+  <div class="col-md-5">
+    <div class="k-card h-100">
+      <div class="k-card-header pale">
+        <i class="bi bi-boxes"></i>
+        <span data-mr="सध्याचा साठा" data-en="Current Stock">सध्याचा साठा</span>
+      </div>
+      <div class="k-card-body p-0">
+        {% if stocks %}
+        <div style="padding:.5rem 0;">
+          {% for s in stocks %}
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:.6rem 1rem;border-bottom:1px solid var(--border);">
+            <div>
+              <div style="font-weight:600;font-size:.9rem;">{{ s.name_mr or s.name_en }}</div>
+              <div style="font-size:.78rem;color:var(--muted);">{{ s.quantity_kg | int }} kg · {{ s.storage_type }}</div>
+            </div>
+            <a href="/advisor?crop={{ s.name_en }}" style="font-size:.78rem;color:var(--green);text-decoration:none;background:var(--green-pale);padding:.25rem .6rem;border-radius:50px;font-weight:600;"
+               data-mr="AI सल्ला" data-en="AI Advice">AI सल्ला</a>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align:center;padding:2rem;color:var(--muted);">
+          <div style="font-size:2rem;">📦</div>
+          <p style="font-size:.85rem;margin-top:.5rem;" data-mr="कोणताही साठा नाही" data-en="No stock yet">कोणताही साठा नाही</p>
+          <a href="/stock" style="font-size:.82rem;color:var(--green);font-weight:600;" data-mr="साठा जोडा →" data-en="Add Stock →">साठा जोडा →</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Sales -->
+  <div class="col-12">
+    <div class="k-card">
+      <div class="k-card-header blue">
+        <i class="bi bi-receipt"></i>
+        <span data-mr="अलीकडील विक्री" data-en="Recent Sales">अलीकडील विक्री</span>
+        <a href="/sales" style="margin-left:auto;color:rgba(255,255,255,.8);font-size:.8rem;text-decoration:none;" data-mr="सर्व पहा →" data-en="View All →">सर्व पहा →</a>
+      </div>
+      {% if recent_sales %}
+      <div style="overflow-x:auto;">
+        <table class="k-table">
+          <thead>
+            <tr>
+              <th data-mr="पीक" data-en="Crop">पीक</th>
+              <th data-mr="प्रमाण" data-en="Qty">प्रमाण</th>
+              <th data-mr="भाव" data-en="Price">भाव</th>
+              <th data-mr="एकूण" data-en="Total">एकूण</th>
+              <th data-mr="नफा" data-en="Profit">नफा</th>
+              <th data-mr="तारीख" data-en="Date">तारीख</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for s in recent_sales %}
+          <tr>
+            <td><strong>{{ s.name_mr or s.name_en }}</strong></td>
+            <td>{{ s.quantity_kg | int }} kg</td>
+            <td>₹{{ s.sale_price }}/kg</td>
+            <td>₹{{ '{:,.0f}'.format(s.total_amount) }}</td>
+            <td style="color:{% if s.profit >= 0 %}var(--green){% else %}var(--red){% endif %};font-weight:700;">
+              ₹{{ '{:,.0f}'.format(s.profit) }}
+            </td>
+            <td style="font-size:.82rem;color:var(--muted);">{{ s.sale_date or s.created_at[:10] }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="k-card-body" style="text-align:center;color:var(--muted);padding:2rem;">
+        <div style="font-size:2rem;">🧾</div>
+        <p style="font-size:.85rem;margin-top:.5rem;" data-mr="अजून कोणतीही विक्री नाही" data-en="No sales recorded yet">अजून कोणतीही विक्री नाही</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+const monthlyData = {{ monthly | tojson }};
+const labels = monthlyData.map(r => r.mo).reverse();
+const vals   = monthlyData.map(r => r.p).reverse();
+new Chart(document.getElementById('monthlyChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: labels.length ? labels : ['कोणतीही माहिती नाही'],
+    datasets: [{
+      label: 'नफा ₹',
+      data: vals.length ? vals : [0],
+      backgroundColor: '#2e7d52',
+      borderRadius: 8,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { ticks: { callback: v => '₹' + v } } }
+  }
+});
+</script>
+{% endblock %}

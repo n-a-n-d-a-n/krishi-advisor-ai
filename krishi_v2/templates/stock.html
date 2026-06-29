@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}माल साठा – KrishiAdvisor{% endblock %}
+{% block content %}
+<div class="page-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+  <div>
+    <h1><i class="bi bi-boxes me-2" style="color:var(--blue);"></i>
+      <span data-mr="माल साठा व्यवस्थापन" data-en="Stock Management">माल साठा व्यवस्थापन</span>
+    </h1>
+    <div class="subtitle" data-mr="तुमचा सर्व माल साठा येथे ट्रॅक करा" data-en="Track all your crop inventory here">तुमचा सर्व माल साठा येथे ट्रॅक करा</div>
+  </div>
+  <button class="btn-krishi" onclick="document.getElementById('addStockModal').style.display='flex'">
+    <i class="bi bi-plus-lg"></i>
+    <span data-mr="नवीन साठा जोडा" data-en="Add New Stock">नवीन साठा जोडा</span>
+  </button>
+</div>
+
+<!-- Stock Cards -->
+{% if stocks %}
+<div class="row g-3">
+  {% for s in stocks %}
+  <div class="col-md-6 col-xl-4">
+    <div class="k-card">
+      <div class="k-card-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;">
+          <div>
+            <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;">
+              {{ s.name_mr or s.name_en }}
+            </div>
+            <div style="font-size:.78rem;color:var(--muted);">{{ s.name_en.capitalize() }} · {{ s.category }}</div>
+          </div>
+          <span style="background:{% if s.status=='stored' %}var(--green-pale){% else %}#fee2e2{% endif %};color:{% if s.status=='stored' %}var(--green){% else %}var(--red){% endif %};padding:.2rem .7rem;border-radius:50px;font-size:.75rem;font-weight:700;">
+            {{ '📦 साठवलेले' if s.status=='stored' else '✅ विकले' }}
+          </span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;">
+          {% for lbl_mr,lbl_en,val in [
+            ('प्रमाण','Quantity', s.quantity_kg|int|string + ' kg'),
+            ('खरेदी भाव','Buy Price', '₹'+(s.purchase_price|string if s.purchase_price else '–')+'/kg'),
+            ('उत्पादन खर्च','Prod. Cost', '₹'+(s.production_cost|string if s.production_cost else '0')+'/kg'),
+            ('साठवण','Storage', s.storage_type),
+          ] %}
+          <div style="background:var(--bg);border-radius:8px;padding:.4rem .6rem;">
+            <div style="font-size:.68rem;color:var(--muted);" data-mr="{{ lbl_mr }}" data-en="{{ lbl_en }}">{{ lbl_mr }}</div>
+            <div style="font-size:.88rem;font-weight:600;">{{ val }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        {% if s.status == 'stored' %}
+        <div style="display:flex;gap:.5rem;">
+          <a href="/advisor?crop={{ s.name_en }}" class="btn-krishi text-decoration-none" style="flex:1;justify-content:center;font-size:.82rem;padding:.45rem;">
+            <i class="bi bi-cpu"></i>
+            <span data-mr="AI सल्ला" data-en="AI Advice">AI सल्ला</span>
+          </a>
+          <button class="btn-krishi btn-amber" style="flex:1;font-size:.82rem;padding:.45rem;"
+                  onclick="openSellModal({{ s.id }}, '{{ s.name_mr or s.name_en }}', {{ s.quantity_kg }})">
+            <i class="bi bi-cash-coin"></i>
+            <span data-mr="विक्री" data-en="Sell">विक्री</span>
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div style="text-align:center;padding:4rem;color:var(--muted);">
+  <div style="font-size:4rem;">📦</div>
+  <p style="font-size:1rem;margin-top:1rem;font-family:'Baloo 2',cursive;" data-mr="अजून कोणताही साठा नाही" data-en="No stock added yet">अजून कोणताही साठा नाही</p>
+  <button class="btn-krishi mt-2" onclick="document.getElementById('addStockModal').style.display='flex'">
+    <i class="bi bi-plus-lg"></i>
+    <span data-mr="पहिला साठा जोडा" data-en="Add First Stock">पहिला साठा जोडा</span>
+  </button>
+</div>
+{% endif %}
+
+<!-- ── Add Stock Modal ─────────────────────────────────────────────────────── -->
+<div id="addStockModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:white;border-radius:20px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;">
+    <div style="background:var(--green);color:white;padding:1rem 1.3rem;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:'Baloo 2',cursive;font-weight:700;font-size:1.1rem;" data-mr="📦 नवीन साठा जोडा" data-en="📦 Add New Stock">📦 नवीन साठा जोडा</span>
+      <button onclick="document.getElementById('addStockModal').style.display='none'" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer;">✕</button>
+    </div>
+    <form action="/stock/add" method="POST" style="padding:1.3rem;">
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label" data-mr="पिकाचा प्रकार *" data-en="Crop Type *">पिकाचा प्रकार *</label>
+          <select class="form-select" name="crop_id" required>
+            <option value="">-- निवडा --</option>
+            {% for c in crops %}
+            <option value="{{ c.id }}">{{ c.name_mr or '' }} – {{ c.name_en.capitalize() }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-6">
+          <label class="form-label" data-mr="प्रमाण (kg) *" data-en="Quantity (kg) *">प्रमाण (kg) *</label>
+          <input type="number" class="form-control" name="quantity_kg" placeholder="500" min="1" required/>
+        </div>
+        <div class="col-6">
+          <label class="form-label" data-mr="खरेदी भाव (₹/kg)" data-en="Purchase Price (₹/kg)">खरेदी भाव (₹/kg)</label>
+          <input type="number" class="form-control" name="purchase_price" placeholder="12" step="0.1" min="0"/>
+        </div>
+        <div class="col-6">
+          <label class="form-label" data-mr="उत्पादन खर्च (₹/kg)" data-en="Production Cost (₹/kg)">उत्पादन खर्च (₹/kg)</label>
+          <input type="number" class="form-control" name="production_cost" placeholder="5" step="0.1" min="0" value="0"/>
+        </div>
+        <div class="col-6">
+          <label class="form-label" data-mr="कापणी तारीख" data-en="Harvest Date">कापणी तारीख</label>
+          <input type="date" class="form-control" name="harvest_date"/>
+        </div>
+        <div class="col-12">
+          <label class="form-label" data-mr="साठवणूक प्रकार" data-en="Storage Type">साठवणूक प्रकार</label>
+          <select class="form-select" name="storage_type">
+            <option value="home">घर / Home</option>
+            <option value="cold_storage">शीतगृह / Cold Storage</option>
+            <option value="warehouse">गोदाम / Warehouse</option>
+            <option value="field">शेत / Field</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label" data-mr="नोट्स" data-en="Notes">नोट्स</label>
+          <input type="text" class="form-control" name="notes" placeholder="वाढीव माहिती..."/>
+        </div>
+      </div>
+      <button type="submit" class="btn-krishi w-100 mt-3">
+        <i class="bi bi-plus-circle-fill"></i>
+        <span data-mr="साठा जोडा" data-en="Add Stock">साठा जोडा</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ── Sell Modal ─────────────────────────────────────────────────────────── -->
+<div id="sellModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:white;border-radius:20px;width:100%;max-width:400px;">
+    <div style="background:var(--amber);color:white;padding:1rem 1.3rem;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between;">
+      <span id="sellModalTitle" style="font-family:'Baloo 2',cursive;font-weight:700;font-size:1.1rem;">💰 विक्री नोंदवा</span>
+      <button onclick="document.getElementById('sellModal').style.display='none'" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer;">✕</button>
+    </div>
+    <form id="sellForm" method="POST" style="padding:1.3rem;">
+      <div class="row g-3">
+        <div class="col-6">
+          <label class="form-label" data-mr="प्रमाण (kg) *" data-en="Quantity (kg) *">प्रमाण (kg) *</label>
+          <input type="number" class="form-control" name="quantity_kg" id="sellQty" placeholder="100" min="0.1" step="0.1" required/>
+        </div>
+        <div class="col-6">
+          <label class="form-label" data-mr="विक्री भाव (₹/kg) *" data-en="Sale Price (₹/kg) *">विक्री भाव (₹/kg) *</label>
+          <input type="number" class="form-control" name="sale_price" placeholder="15" step="0.1" min="0.1" required/>
+        </div>
+        <div class="col-6">
+          <label class="form-label" data-mr="खरेदीदाराचे नाव" data-en="Buyer Name">खरेदीदाराचे नाव</label>
+          <input type="text" class="form-control" name="buyer" placeholder="व्यापारी..."/>
+        </div>
+        <div class="col-6">
+          <label class="form-label" data-mr="विक्री तारीख" data-en="Sale Date">विक्री तारीख</label>
+          <input type="date" class="form-control" name="sale_date" value="{{ now[:10] if now else '' }}"/>
+        </div>
+      </div>
+      <button type="submit" class="btn-krishi btn-amber w-100 mt-3">
+        <i class="bi bi-cash-coin"></i>
+        <span data-mr="विक्री नोंदवा" data-en="Record Sale">विक्री नोंदवा</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+function openSellModal(stockId, cropName, maxQty) {
+  document.getElementById('sellForm').action = '/stock/sell/' + stockId;
+  document.getElementById('sellModalTitle').textContent = '💰 विक्री – ' + cropName;
+  document.getElementById('sellQty').max = maxQty;
+  document.getElementById('sellQty').value = '';
+  document.getElementById('sellModal').style.display = 'flex';
+}
+
+// Set today's date as default
+const today = new Date().toISOString().split('T')[0];
+const saleDateInput = document.querySelector('[name="sale_date"]');
+if (saleDateInput && !saleDateInput.value) saleDateInput.value = today;
+</script>
+{% endblock %}

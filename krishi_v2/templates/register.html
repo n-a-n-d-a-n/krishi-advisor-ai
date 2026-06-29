@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}नोंदणी – KrishiAdvisor{% endblock %}
+{% block content %}
+<div style="max-width:480px;margin:2rem auto;">
+  <div class="k-card">
+    <div class="k-card-header green" style="justify-content:center;padding:1.5rem;">
+      <div style="text-align:center;">
+        <div style="font-size:3rem;">🌱</div>
+        <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;margin-top:.4rem;" data-mr="नवीन नोंदणी" data-en="New Registration">नवीन नोंदणी</div>
+        <div style="font-size:.82rem;opacity:.85;" data-mr="मोफत खाते तयार करा" data-en="Create free account">मोफत खाते तयार करा</div>
+      </div>
+    </div>
+    <div class="k-card-body">
+      <form method="POST">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label">
+              <span data-mr="👤 पूर्ण नाव *" data-en="👤 Full Name *">👤 पूर्ण नाव *</span>
+            </label>
+            <input type="text" class="form-control" name="name" placeholder="राम शिंदे / Ram Shinde" required/>
+          </div>
+          <div class="col-12">
+            <label class="form-label">
+              <span data-mr="📱 मोबाइल नंबर *" data-en="📱 Mobile Number *">📱 मोबाइल नंबर *</span>
+            </label>
+            <input type="tel" class="form-control" name="phone" placeholder="9876543210" required/>
+          </div>
+          <div class="col-6">
+            <label class="form-label">
+              <span data-mr="🏘️ गाव" data-en="🏘️ Village">🏘️ गाव</span>
+            </label>
+            <input type="text" class="form-control" name="village" placeholder="नगर..."/>
+          </div>
+          <div class="col-6">
+            <label class="form-label">
+              <span data-mr="📍 जिल्हा" data-en="📍 District">📍 जिल्हा</span>
+            </label>
+            <select class="form-select" name="district">
+              <option value="">निवडा...</option>
+              {% for d in ['Pune','Nashik','Ahmednagar','Solapur','Kolhapur','Satara','Sangli',
+                           'Aurangabad','Latur','Osmanabad','Nanded','Jalgaon','Amravati',
+                           'Nagpur','Wardha','Yavatmal','Buldhana','Akola'] %}
+              <option>{{ d }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">
+              <span data-mr="🔒 पासवर्ड *" data-en="🔒 Password *">🔒 पासवर्ड *</span>
+            </label>
+            <input type="password" class="form-control" name="password"
+                   placeholder="किमान ६ अक्षरे / Min 6 characters" required minlength="6"/>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-krishi w-100 mt-4" style="font-size:1.05rem;padding:.75rem;">
+          <i class="bi bi-person-check-fill"></i>
+          <span data-mr="नोंदणी करा" data-en="Register">नोंदणी करा</span>
+        </button>
+      </form>
+
+      <div style="text-align:center;margin-top:1rem;font-size:.88rem;color:var(--muted);">
+        <span data-mr="आधीच खाते आहे?" data-en="Already have account?">आधीच खाते आहे?</span>
+        <a href="/login" style="color:var(--green);font-weight:600;text-decoration:none;"
+           data-mr=" लॉगिन करा" data-en=" Login"> लॉगिन करा</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

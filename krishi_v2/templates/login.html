@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}लॉगिन – KrishiAdvisor{% endblock %}
+{% block content %}
+<div style="max-width:420px;margin:2rem auto;">
+  <div class="k-card">
+    <div class="k-card-header green" style="justify-content:center;padding:1.5rem;">
+      <div style="text-align:center;">
+        <div style="font-size:3rem;">👨‍🌾</div>
+        <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;margin-top:.4rem;" data-mr="शेतकरी लॉगिन" data-en="Farmer Login">शेतकरी लॉगिन</div>
+        <div style="font-size:.82rem;opacity:.85;" data-mr="तुमचे खाते उघडा" data-en="Open your account">तुमचे खाते उघडा</div>
+      </div>
+    </div>
+    <div class="k-card-body">
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label" data-mr="📱 मोबाइल नंबर" data-en="📱 Mobile Number">📱 मोबाइल नंबर</label>
+          <input type="tel" class="form-control" name="phone" placeholder="9876543210" required
+                 style="font-size:1.1rem;padding:.7rem 1rem;"/>
+        </div>
+        <div class="mb-4">
+          <label class="form-label" data-mr="🔒 पासवर्ड" data-en="🔒 Password">🔒 पासवर्ड</label>
+          <input type="password" class="form-control" name="password" placeholder="••••••••" required
+                 style="font-size:1.1rem;padding:.7rem 1rem;"/>
+        </div>
+        <button type="submit" class="btn-krishi w-100" style="font-size:1.1rem;padding:.8rem;">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span data-mr="लॉगिन करा" data-en="Login">लॉगिन करा</span>
+        </button>
+      </form>
+
+      <div style="text-align:center;margin-top:1.2rem;font-size:.88rem;color:var(--muted);">
+        <span data-mr="नवीन शेतकरी?" data-en="New farmer?">नवीन शेतकरी?</span>
+        <a href="/register" style="color:var(--green);font-weight:600;text-decoration:none;"
+           data-mr=" नोंदणी करा" data-en=" Register here"> नोंदणी करा</a>
+      </div>
+      <div style="text-align:center;margin-top:.6rem;">
+        <a href="/advisor" style="font-size:.82rem;color:var(--muted);text-decoration:none;"
+           data-mr="लॉगिन शिवाय AI वापरा →" data-en="Use AI without login →">लॉगिन शिवाय AI वापरा →</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

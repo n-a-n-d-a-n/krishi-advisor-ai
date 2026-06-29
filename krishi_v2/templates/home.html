@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}KrishiAdvisor AI – शेतकऱ्यांचा AI सल्लागार{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section fade-in" style="
+  background: linear-gradient(135deg, #1b5e35 0%, #2e7d52 50%, #4caf7d 100%);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  color: white;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+">
+  <div style="position:absolute;right:1rem;top:0;font-size:8rem;opacity:.08;">🌾</div>
+  <div style="position:absolute;right:10rem;bottom:-1rem;font-size:6rem;opacity:.06;">🥭</div>
+
+  <div class="row align-items-center">
+    <div class="col-md-7">
+      <div style="font-size:.85rem;background:rgba(255,255,255,.15);display:inline-block;padding:.3rem .9rem;border-radius:50px;margin-bottom:.8rem;">
+        🤖 AI-Powered • Maharashtra Farmers
+      </div>
+      <h1 style="font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;line-height:1.2;margin-bottom:.8rem;">
+        <span style="color:#f9ca24;">कृषि</span>Advisor AI<br/>
+        <span style="font-size:1.2rem;font-weight:400;opacity:.9;">शेतकऱ्यांचा स्मार्ट नफा सल्लागार</span>
+      </h1>
+      <p style="opacity:.9;max-width:500px;margin-bottom:1.5rem;font-size:1rem;">
+        तुमचे पीक कधी विकायचे? साठवायचे? प्रक्रिया करायची?
+        <strong>AI तुम्हाला सांगेल — सर्वाधिक नफ्यासाठी.</strong>
+      </p>
+      <div class="d-flex gap-3 flex-wrap">
+        <a href="/advisor" class="btn-krishi btn-amber text-decoration-none" style="font-size:1.05rem;padding:.75rem 1.8rem;">
+          <i class="bi bi-cpu-fill"></i>
+          <span data-mr="AI सल्ला घ्या" data-en="Get AI Advice">AI सल्ला घ्या</span>
+        </a>
+        {% if not session.user_id %}
+        <a href="/register" class="btn-krishi text-decoration-none" style="background:rgba(255,255,255,.2);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.4);">
+          <i class="bi bi-person-plus"></i>
+          <span data-mr="मोफत नोंदणी" data-en="Free Register">मोफत नोंदणी</span>
+        </a>
+        {% else %}
+        <a href="/dashboard" class="btn-krishi text-decoration-none" style="background:rgba(255,255,255,.2);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.4);">
+          <i class="bi bi-speedometer2"></i>
+          <span data-mr="डॅशबोर्ड" data-en="Dashboard">डॅशबोर्ड</span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-5 d-none d-md-block text-center mt-3 mt-md-0">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;max-width:280px;margin:auto;">
+        {% set icons = [('📦','साठवण','Storage'),('💰','नफा','Profit'),('📊','अंदाज','Forecast'),('🌡️','धोका','Risk')] %}
+        {% for icon,mr,en in icons %}
+        <div style="background:rgba(255,255,255,.15);border-radius:14px;padding:1rem;text-align:center;backdrop-filter:blur(8px);">
+          <div style="font-size:2rem;">{{ icon }}</div>
+          <div style="font-size:.8rem;margin-top:.3rem;font-weight:600;" data-mr="{{ mr }}" data-en="{{ en }}">{{ mr }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row g-3 mb-4 fade-in">
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#e8f5ee;">🌾</div>
+      <div>
+        <div class="stat-val" style="color:var(--green);">30+</div>
+        <div class="stat-lbl" data-mr="पिके उपलब्ध" data-en="Crops Available">पिके उपलब्ध</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fff3cd;">🤖</div>
+      <div>
+        <div class="stat-val" style="color:var(--amber);">AI</div>
+        <div class="stat-lbl" data-mr="ML अंदाज" data-en="ML Predictions">ML अंदाज</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#dbeafe;">📊</div>
+      <div>
+        <div class="stat-val" style="color:var(--blue);">4</div>
+        <div class="stat-lbl" data-mr="महिन्यांचा अंदाज" data-en="Months Forecast">महिन्यांचा अंदाज</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fee2e2;">🆓</div>
+      <div>
+        <div class="stat-val" style="color:var(--red);">मोफत</div>
+        <div class="stat-lbl" data-mr="सर्व शेतकऱ्यांसाठी" data-en="For All Farmers">सर्व शेतकऱ्यांसाठी</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features Grid -->
+<div class="row g-3 mb-4">
+  {% set features = [
+    ('bi-cpu-fill','#1b5e35','AI किंमत अंदाज','AI Price Prediction','मशीन लर्निंग वापरून पुढील ४ महिन्यांचा भाव अंदाज','ML-based price forecast for next 4 months','/advisor'),
+    ('bi-boxes','#1565c0','माल साठा व्यवस्थापन','Stock Management','तुमचा सर्व माल साठा ट्रॅक करा एकाच ठिकाणी','Track all your crop inventory in one place','/stock'),
+    ('bi-receipt','#e67e22','विक्री इतिहास','Sales History','प्रत्येक विक्रीची नोंद आणि नफ्याचे विश्लेषण','Record every sale and analyze profits','/sales'),
+    ('bi-translate','#6d28d9','मराठी अनुवाद','Marathi Translation','सर्व शब्दांचे मराठी अनुवाद तात्काळ','Instant Marathi translation of all terms','#'),
+  ] %}
+  {% for icon,color,mr_title,en_title,mr_desc,en_desc,link in features %}
+  <div class="col-md-6">
+    <a href="{{ link }}" class="text-decoration-none">
+      <div class="k-card" style="transition:transform .2s,box-shadow .2s;cursor:pointer;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 30px rgba(0,0,0,.12)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div class="k-card-body d-flex gap-3 align-items-start">
+          <div style="width:48px;height:48px;border-radius:12px;background:{{ color }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="bi {{ icon }}" style="color:white;font-size:1.3rem;"></i>
+          </div>
+          <div>
+            <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:1rem;color:var(--text);"
+                 data-mr="{{ mr_title }}" data-en="{{ en_title }}">{{ mr_title }}</div>
+            <div style="font-size:.83rem;color:var(--muted);margin-top:.2rem;"
+                 data-mr="{{ mr_desc }}" data-en="{{ en_desc }}">{{ mr_desc }}</div>
+          </div>
+          <i class="bi bi-arrow-right ms-auto" style="color:var(--muted);margin-top:.2rem;"></i>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Crops Quick Access -->
+<div class="k-card">
+  <div class="k-card-header pale">
+    <i class="bi bi-grid-fill"></i>
+    <span data-mr="लोकप्रिय पिके — थेट AI सल्ला घ्या" data-en="Popular Crops — Get AI Advice">लोकप्रिय पिके — थेट AI सल्ला घ्या</span>
+  </div>
+  <div class="k-card-body">
+    <div style="display:flex;flex-wrap:wrap;gap:.6rem;">
+      {% set popular = [('onion','🧅','कांदा'),('mango','🥭','आंबा'),('tomato','🍅','टोमॅटो'),
+                        ('potato','🥔','बटाटा'),('grapes','🍇','द्राक्षे'),('banana','🍌','केळी'),
+                        ('orange','🍊','संत्रा'),('wheat','🌾','गहू'),('soybean','🫘','सोयाबीन'),
+                        ('chilli','🌶️','मिरची'),('garlic','🧄','लसूण'),('pomegranate','🍎','डाळिंब')] %}
+      {% for crop_en, emoji, crop_mr in popular %}
+      <a href="/advisor?crop={{ crop_en }}" class="text-decoration-none">
+        <div style="background:var(--green-pale);border:1.5px solid var(--border);border-radius:50px;padding:.4rem 1rem;display:flex;align-items:center;gap:.4rem;font-size:.88rem;font-weight:600;color:var(--green);transition:all .15s;"
+             onmouseover="this.style.background='var(--green)';this.style.color='white'"
+             onmouseout="this.style.background='var(--green-pale)';this.style.color='var(--green)'">
+          {{ emoji }} {{ crop_mr }}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

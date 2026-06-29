@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}प्रोफाइल – KrishiAdvisor{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1><i class="bi bi-person-circle me-2"></i>
+    <span data-mr="माझी प्रोफाइल" data-en="My Profile">माझी प्रोफाइल</span>
+  </h1>
+</div>
+<div style="max-width:500px;">
+  <div class="k-card">
+    <div class="k-card-header green">
+      <i class="bi bi-pencil-square"></i>
+      <span data-mr="माहिती अपडेट करा" data-en="Update Information">माहिती अपडेट करा</span>
+    </div>
+    <div class="k-card-body">
+      <form method="POST">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label" data-mr="पूर्ण नाव" data-en="Full Name">पूर्ण नाव</label>
+            <input type="text" class="form-control" name="name" value="{{ user.name }}" required/>
+          </div>
+          <div class="col-12">
+            <label class="form-label" data-mr="मोबाइल नंबर" data-en="Mobile">मोबाइल नंबर</label>
+            <input type="text" class="form-control" value="{{ user.phone }}" disabled style="background:#f5f5f5;"/>
+          </div>
+          <div class="col-6">
+            <label class="form-label" data-mr="गाव" data-en="Village">गाव</label>
+            <input type="text" class="form-control" name="village" value="{{ user.village or '' }}"/>
+          </div>
+          <div class="col-6">
+            <label class="form-label" data-mr="जिल्हा" data-en="District">जिल्हा</label>
+            <select class="form-select" name="district">
+              {% for d in ['Pune','Nashik','Ahmednagar','Solapur','Kolhapur','Satara','Sangli','Aurangabad','Latur','Osmanabad','Nanded','Jalgaon','Amravati','Nagpur'] %}
+              <option {% if user.district == d %}selected{% endif %}>{{ d }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label" data-mr="पसंतीची भाषा" data-en="Preferred Language">पसंतीची भाषा</label>
+            <select class="form-select" name="lang">
+              <option value="mr" {% if user.lang=='mr' %}selected{% endif %}>मराठी</option>
+              <option value="en" {% if user.lang=='en' %}selected{% endif %}>English</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn-krishi w-100 mt-3">
+          <i class="bi bi-check-circle-fill"></i>
+          <span data-mr="जतन करा" data-en="Save Changes">जतन करा</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

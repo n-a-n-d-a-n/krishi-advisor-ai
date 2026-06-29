@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}आमच्याबद्दल – KrishiAdvisor{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1 data-mr="KrishiAdvisor AI बद्दल" data-en="About KrishiAdvisor AI">KrishiAdvisor AI बद्दल</h1>
+</div>
+<div class="row g-4">
+  <div class="col-md-8">
+    <div class="k-card">
+      <div class="k-card-header green"><i class="bi bi-info-circle-fill"></i> <span data-mr="आमच्याबद्दल" data-en="About Us">आमच्याबद्दल</span></div>
+      <div class="k-card-body">
+        <p style="font-size:1rem;line-height:1.7;" data-mr="KrishiAdvisor AI हे महाराष्ट्रातील शेतकऱ्यांसाठी एक AI-आधारित निर्णय सहाय्य प्रणाली आहे." data-en="KrishiAdvisor AI is an AI-powered decision support system for farmers in Maharashtra.">
+          KrishiAdvisor AI हे महाराष्ट्रातील शेतकऱ्यांसाठी एक AI-आधारित निर्णय सहाय्य प्रणाली आहे.
+        </p>
+        <hr/>
+        <h5 style="font-family:'Baloo 2',cursive;color:var(--green);" data-mr="मुख्य वैशिष्ट्ये" data-en="Key Features">मुख्य वैशिष्ट्ये</h5>
+        <ul style="line-height:2;font-size:.93rem;">
+          {% for f_mr, f_en in [
+            ('🤖 AI किंमत अंदाज – मशीन लर्निंग मॉडेल','🤖 AI Price Prediction – ML Models'),
+            ('📦 माल साठा व्यवस्थापन','📦 Stock Management System'),
+            ('💰 नफा डॅशबोर्ड','💰 Profit Dashboard'),
+            ('🌐 मराठी-इंग्रजी अनुवाद','🌐 Marathi-English Translation'),
+            ('📊 विक्री इतिहास व विश्लेषण','📊 Sales History & Analysis'),
+            ('🥭 प्रक्रिया उत्पादन सल्ला','🥭 Processing Strategy Advice'),
+            ('📱 मोबाइल-friendly','📱 Mobile-friendly Design'),
+          ] %}
+          <li data-mr="{{ f_mr }}" data-en="{{ f_en }}">{{ f_mr }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="k-card" style="background:var(--green);color:white;">
+      <div class="k-card-body" style="text-align:center;padding:2rem;">
+        <div style="font-size:4rem;">🌿</div>
+        <div style="font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;margin:.5rem 0;">KrishiAdvisor AI</div>
+        <div style="opacity:.85;font-size:.9rem;" data-mr="शेतकऱ्यांचा डिजिटल मित्र" data-en="Farmer's Digital Friend">शेतकऱ्यांचा डिजिटल मित्र</div>
+        <div style="margin-top:1.5rem;font-size:.82rem;opacity:.7;">Version 2.0 · Maharashtra, India</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

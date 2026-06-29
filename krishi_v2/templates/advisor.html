@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+{% block title %}AI सल्लागार – KrishiAdvisor{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1><i class="bi bi-cpu-fill me-2" style="color:var(--green-mid);"></i>
+    <span data-mr="AI नफा सल्लागार" data-en="AI Profit Advisor">AI नफा सल्लागार</span>
+  </h1>
+  <div class="subtitle" data-mr="तुमच्या पिकाचे विश्लेषण करा — सर्वोत्तम धोरण शोधा" data-en="Analyse your crop — find the best strategy">
+    तुमच्या पिकाचे विश्लेषण करा — सर्वोत्तम धोरण शोधा
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- INPUT FORM -->
+  <div class="col-lg-5">
+    <div class="k-card">
+      <div class="k-card-header green">
+        <i class="bi bi-pencil-square"></i>
+        <span data-mr="पिकाची माहिती भरा" data-en="Enter Crop Details">पिकाची माहिती भरा</span>
+      </div>
+      <div class="k-card-body">
+        <form id="advisorForm">
+
+          <!-- Crop Selection -->
+          <div class="mb-3">
+            <label class="form-label">
+              <span data-mr="पिकाचा प्रकार" data-en="Crop Type">पिकाचा प्रकार</span>
+              <span class="mr-label" data-mr="(खाली यादीतून निवडा)" data-en="(Select from list)">(खाली यादीतून निवडा)</span>
+            </label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-flower1 inp-icon"></i>
+              <select class="form-select" name="crop_id" id="cropSelect" required onchange="updateCropName()">
+                <option value="">-- पीक निवडा / Select Crop --</option>
+                {% for c in crops %}
+                <option value="{{ c.id }}" data-en="{{ c.name_en }}" data-mr="{{ c.name_mr or c.name_en }}">
+                  {{ c.name_mr or '' }} – {{ c.name_en.capitalize() }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <!-- Quantity & Price -->
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label">
+                <span data-mr="प्रमाण (किलो)" data-en="Quantity (kg)">प्रमाण (किलो)</span>
+              </label>
+              <div class="input-icon-wrap">
+                <i class="bi bi-box-seam inp-icon"></i>
+                <input type="number" class="form-control" name="quantity"
+                       placeholder="500" min="1" required/>
+              </div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">
+                <span data-mr="सध्याचा भाव (₹/किलो)" data-en="Current Price (₹/kg)">सध्याचा भाव (₹/किलो)</span>
+              </label>
+              <div class="input-icon-wrap">
+                <i class="bi bi-currency-rupee inp-icon"></i>
+                <input type="number" class="form-control" name="current_price"
+                       placeholder="12" min="0.1" step="0.1" required/>
+              </div>
+            </div>
+          </div>
+
+          <!-- Production Cost -->
+          <div class="mb-3">
+            <label class="form-label">
+              <span data-mr="उत्पादन खर्च (₹/किलो)" data-en="Production Cost (₹/kg)">उत्पादन खर्च (₹/किलो)</span>
+              <span class="mr-label" data-mr="(खते, मजुरी, सिंचन इ.)" data-en="(Fertilizer, labour, irrigation etc.)">(खते, मजुरी, सिंचन इ.)</span>
+            </label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-tools inp-icon"></i>
+              <input type="number" class="form-control" name="production_cost"
+                     placeholder="0" min="0" step="0.1" value="0"/>
+            </div>
+          </div>
+
+          <!-- Transport & Storage -->
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label">
+                <span data-mr="वाहतूक (₹/किलो)" data-en="Transport (₹/kg)">वाहतूक (₹/किलो)</span>
+              </label>
+              <div class="input-icon-wrap">
+                <i class="bi bi-truck inp-icon"></i>
+                <input type="number" class="form-control" name="transport_cost"
+                       placeholder="2" min="0" step="0.1" value="2"/>
+              </div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">
+                <span data-mr="साठवण (₹/किलो/महिना)" data-en="Storage (₹/kg/month)">साठवण (₹/किलो/महिना)</span>
+              </label>
+              <div class="input-icon-wrap">
+                <i class="bi bi-building inp-icon"></i>
+                <input type="number" class="form-control" name="storage_cost"
+                       placeholder="2" min="0" step="0.1" value="2"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- Temperature -->
+          <div class="mb-3">
+            <label class="form-label">
+              <span data-mr="साठवणुकीचे तापमान" data-en="Storage Temperature">साठवणुकीचे तापमान</span>
+            </label>
+            <div class="d-flex gap-2">
+              {% for val,mr,en,color in [('low','थंड (<10°C)','Cold (<10°C)','#1565c0'),('medium','साधारण (10-20°C)','Normal (10-20°C)','#e67e22'),('high','उष्ण (>20°C)','Hot (>20°C)','#c0392b')] %}
+              <label style="flex:1;cursor:pointer;">
+                <input type="radio" name="temperature" value="{{ val }}" {% if val=='medium' %}checked{% endif %} style="display:none;" class="temp-radio" onchange="highlightTemp()"/>
+                <div class="temp-opt" data-val="{{ val }}" style="border:2px solid {{ color }};border-radius:10px;padding:.45rem .3rem;text-align:center;font-size:.78rem;font-weight:600;color:{{ color }};transition:all .2s;">
+                  <span data-mr="{{ mr }}" data-en="{{ en }}">{{ mr }}</span>
+                </div>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Past Prices -->
+          <div style="background:var(--green-pale);border-radius:12px;padding:1rem;margin-bottom:1rem;">
+            <div style="font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;color:var(--green);margin-bottom:.6rem;">
+              📅 <span data-mr="मागील ३ वर्षांचे भाव (AI साठी)" data-en="Past 3 Year Prices (for AI)">मागील ३ वर्षांचे भाव (AI साठी)</span>
+            </div>
+            <div class="row g-2">
+              {% for i,yr in [(1,'3 वर्षांपूर्वी'),(2,'2 वर्षांपूर्वी'),(3,'गेल्या वर्षी')] %}
+              <div class="col-4">
+                <label class="form-label" style="font-size:.75rem;">{{ yr }}</label>
+                <input type="number" class="form-control form-control-sm"
+                       name="past_price_{{ i }}" placeholder="₹/kg" step="0.1" min="0"/>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <button type="submit" class="btn-krishi w-100 btn-amber" id="analyzeBtn">
+            <i class="bi bi-cpu-fill"></i>
+            <span data-mr="AI विश्लेषण करा" data-en="Run AI Analysis">AI विश्लेषण करा</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS PANEL -->
+  <div class="col-lg-7">
+    <!-- Placeholder -->
+    <div id="placeholder" style="display:flex;align-items:center;justify-content:center;min-height:400px;">
+      <div class="text-center" style="color:var(--muted);">
+        <div style="font-size:4rem;">🌾</div>
+        <p style="margin-top:1rem;font-size:1rem;font-family:'Baloo 2',cursive;" data-mr="डाव्या बाजूची माहिती भरा आणि AI विश्लेषण करा" data-en="Fill the form on left and run AI analysis">
+          डाव्या बाजूची माहिती भरा आणि AI विश्लेषण करा
+        </p>
+      </div>
+    </div>
+
+    <!-- Spinner -->
+    <div id="spinner" style="display:none;text-align:center;padding:3rem;">
+      <div style="font-size:3rem;" class="spin">⚙️</div>
+      <p style="margin-top:1rem;color:var(--muted);font-family:'Baloo 2',cursive;" data-mr="AI विश्लेषण सुरू आहे..." data-en="AI is analysing...">AI विश्लेषण सुरू आहे...</p>
+    </div>
+
+    <!-- Results -->
+    <div id="results" style="display:none;" class="fade-in">
+
+      <!-- Best Strategy Card -->
+      <div class="k-card mb-3">
+        <div class="k-card-header amber">
+          <i class="bi bi-trophy-fill"></i>
+          <span data-mr="सर्वोत्तम धोरण" data-en="Best Strategy">सर्वोत्तम धोरण</span>
+        </div>
+        <div class="k-card-body">
+          <div id="bestStrategyBadge" style="
+            background:var(--green);color:white;
+            font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:700;
+            padding:.6rem 1.4rem;border-radius:50px;
+            display:inline-block;margin-bottom:.8rem;">–</div>
+          <p id="reasonText" style="font-size:.92rem;color:var(--text);margin-bottom:.6rem;"></p>
+          <span id="riskBadge" class="risk-badge">–</span>
+        </div>
+      </div>
+
+      <!-- KPI Grid -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.75rem;margin-bottom:1rem;">
+        {% for id,label_mr,label_en,color in [
+          ('kpiProfit','अपेक्षित नफा','Expected Profit','var(--green)'),
+          ('kpiRevenue','एकूण उत्पन्न','Total Revenue','var(--blue)'),
+          ('kpiCost','एकूण खर्च','Total Cost','var(--amber)'),
+          ('kpiBreakEven','खर्च किंमत','Break-Even','var(--red)'),
+          ('kpiSpoilage','खराबी','Spoilage','#6d28d9'),
+        ] %}
+        <div class="k-card" style="text-align:center;padding:1rem .8rem;">
+          <div id="{{ id }}" style="font-family:'Baloo 2',cursive;font-size:1.35rem;font-weight:800;color:{{ color }};">–</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-top:.2rem;" data-mr="{{ label_mr }}" data-en="{{ label_en }}">{{ label_mr }}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Price Chart -->
+      <div class="k-card mb-3">
+        <div class="k-card-header blue">
+          <i class="bi bi-graph-up-arrow"></i>
+          <span data-mr="पुढील ४ महिन्यांचा भाव अंदाज" data-en="Price Forecast Next 4 Months">पुढील ४ महिन्यांचा भाव अंदाज</span>
+        </div>
+        <div class="k-card-body">
+          <canvas id="priceChart" style="max-height:200px;"></canvas>
+        </div>
+      </div>
+
+      <!-- Strategy Comparison -->
+      <div class="k-card">
+        <div class="k-card-header green">
+          <i class="bi bi-table"></i>
+          <span data-mr="सर्व धोरणांची तुलना" data-en="All Strategy Comparison">सर्व धोरणांची तुलना</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="k-table">
+            <thead>
+              <tr>
+                <th data-mr="धोरण" data-en="Strategy">धोरण</th>
+                <th data-mr="नफा (₹)" data-en="Profit (₹)">नफा (₹)</th>
+                <th data-mr="उत्पन्न (₹)" data-en="Revenue (₹)">उत्पन्न (₹)</th>
+                <th data-mr="खराबी" data-en="Spoilage">खराबी</th>
+                <th data-mr="जोखीम" data-en="Risk">जोखीम</th>
+              </tr>
+            </thead>
+            <tbody id="strategyTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /results -->
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let chartInst = null;
+
+// Pre-select crop from URL param
+const urlCrop = new URLSearchParams(location.search).get('crop');
+if (urlCrop) {
+  const opts = document.querySelectorAll('#cropSelect option');
+  opts.forEach(o => { if (o.dataset.en === urlCrop) o.selected = true; });
+}
+
+function updateCropName() {}
+
+function highlightTemp() {
+  document.querySelectorAll('.temp-opt').forEach(div => {
+    const radio = document.querySelector(`input[value="${div.dataset.val}"]`);
+    div.style.background = radio.checked ? div.style.borderColor.replace('rgb','rgba').replace(')',',.15)') : '';
+    div.style.fontWeight = radio.checked ? '700' : '600';
+  });
+}
+highlightTemp();
+
+// ── Form Submit ──────────────────────────────────────────────────────────────
+document.getElementById('advisorForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const fd   = new FormData(e.target);
+  const sel  = document.getElementById('cropSelect');
+  const data = Object.fromEntries(fd.entries());
+  data.crop_name = sel.options[sel.selectedIndex]?.dataset.en || '';
+
+  document.getElementById('placeholder').style.display = 'none';
+  document.getElementById('results').style.display     = 'none';
+  document.getElementById('spinner').style.display     = 'block';
+  document.getElementById('analyzeBtn').disabled       = true;
+
+  try {
+    const res = await fetch('/api/predict', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    if (result.error) throw new Error(result.error);
+    renderResults(result);
+  } catch(err) {
+    alert('त्रुटी / Error: ' + err.message);
+    document.getElementById('placeholder').style.display = 'flex';
+  } finally {
+    document.getElementById('spinner').style.display     = 'none';
+    document.getElementById('analyzeBtn').disabled       = false;
+  }
+});
+
+function renderResults(d) {
+  // Best strategy
+  document.getElementById('bestStrategyBadge').textContent = '📌 ' + d.best_strategy;
+  document.getElementById('reasonText').textContent         = d.reason;
+  const rb = document.getElementById('riskBadge');
+  rb.textContent = '⚠ ' + d.risk;
+  rb.className   = 'risk-badge risk-' + d.risk;
+
+  // KPIs
+  const profit = d.expected_profit;
+  const kp = document.getElementById('kpiProfit');
+  kp.textContent = '₹' + fmt(profit);
+  kp.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('kpiRevenue').textContent   = '₹' + fmt(d.revenue);
+  document.getElementById('kpiCost').textContent      = '₹' + fmt(d.total_cost);
+  document.getElementById('kpiBreakEven').textContent = '₹' + d.breakeven + '/kg';
+  document.getElementById('kpiSpoilage').textContent  = d.spoilage_pct + '%';
+
+  // Chart
+  const cp = parseFloat(document.querySelector('[name="current_price"]').value) || 0;
+  const labels = ['आत्ता', '१ महिना', '२ महिने', '३ महिने', '४ महिने'];
+  const vals   = [cp, d.predicted_prices[1], d.predicted_prices[2], d.predicted_prices[3], d.predicted_prices[4]];
+  if (chartInst) chartInst.destroy();
+  chartInst = new Chart(document.getElementById('priceChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: '₹/kg',
+        data: vals,
+        borderColor: '#2e7d52',
+        backgroundColor: 'rgba(46,125,82,.1)',
+        pointBackgroundColor: '#1b5e35',
+        pointRadius: 5,
+        fill: true, tension: 0.4,
+      }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: { y: { ticks: { callback: v => '₹' + v } } }
+    }
+  });
+
+  // Strategy table
+  const tbody = document.getElementById('strategyTableBody');
+  tbody.innerHTML = '';
+  d.all_strategies.forEach(s => {
+    const tr = document.createElement('tr');
+    if (s.is_best) tr.classList.add('best-row');
+    const pc = s.profit >= 0 ? 'color:var(--green);' : 'color:var(--red);';
+    tr.innerHTML = `
+      <td>${s.strategy}</td>
+      <td style="font-weight:700;${pc}">₹${fmt(s.profit)}</td>
+      <td>₹${fmt(s.revenue)}</td>
+      <td>${s.spoilage}%</td>
+      <td><span class="risk-badge risk-${s.risk}">${s.risk}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({behavior:'smooth'});
+}
+
+function fmt(n) {
+  return Number(n).toLocaleString('en-IN', {maximumFractionDigits:0});
+}
+</script>
+{% endblock %}

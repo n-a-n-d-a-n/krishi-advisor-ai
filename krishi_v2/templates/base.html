@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="mr" id="htmlRoot">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}KrishiAdvisor AI{% endblock %}</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi:ital@0;1&family=Baloo+2:wght@400;600;700;800&family=Hind:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    /* ══ CSS Variables ══════════════════════════════════════════════════════ */
+    :root {
+      --green:        #1b5e35;
+      --green-mid:    #2e7d52;
+      --green-light:  #4caf7d;
+      --green-pale:   #e8f5ee;
+      --amber:        #e67e22;
+      --amber-light:  #fef3c7;
+      --red:          #c0392b;
+      --blue:         #1565c0;
+      --bg:           #f4f9f5;
+      --card:         #ffffff;
+      --text:         #1a2e22;
+      --muted:        #637a6b;
+      --border:       #d0e8d8;
+      --sidebar-w:    240px;
+      --nav-h:        64px;
+      --shadow:       0 2px 20px rgba(0,0,0,.08);
+      --radius:       14px;
+    }
+
+    /* ══ Reset & Base ══════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Hind', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .marathi-text { font-family: 'Tiro Devanagari Marathi', serif; }
+
+    /* ══ Topbar ════════════════════════════════════════════════════════════ */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: var(--nav-h);
+      background: var(--green);
+      display: flex; align-items: center;
+      padding: 0 1.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,.2);
+    }
+    .topbar-brand {
+      font-family: 'Baloo 2', cursive;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: white;
+      text-decoration: none;
+      display: flex; align-items: center; gap: .5rem;
+      white-space: nowrap;
+    }
+    .topbar-brand span { color: #f9ca24; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .75rem; }
+
+    /* Lang toggle */
+    .lang-toggle {
+      background: rgba(255,255,255,.15);
+      border: 1.5px solid rgba(255,255,255,.3);
+      border-radius: 50px;
+      display: flex; overflow: hidden;
+    }
+    .lang-btn {
+      padding: .3rem .8rem;
+      font-size: .8rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.7);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      transition: all .2s;
+    }
+    .lang-btn.active { background: var(--amber); color: white; border-radius: 50px; }
+
+    .topbar-user {
+      color: rgba(255,255,255,.9);
+      font-size: .88rem;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .topbar-user img {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--amber);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: white; font-size: .9rem;
+    }
+    .avatar-circle {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--amber);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 700; color: white; font-size: .9rem;
+    }
+
+    /* Hamburger */
+    .hamburger {
+      background: none; border: none;
+      color: white; font-size: 1.4rem;
+      cursor: pointer; padding: .4rem;
+      margin-right: .75rem;
+      display: none;
+    }
+
+    /* ══ Sidebar ═══════════════════════════════════════════════════════════ */
+    .sidebar {
+      position: fixed;
+      top: var(--nav-h); left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--card);
+      border-right: 1.5px solid var(--border);
+      overflow-y: auto;
+      z-index: 900;
+      transition: transform .3s ease;
+      padding: 1rem 0;
+    }
+    .sidebar.collapsed { transform: translateX(-100%); }
+    .sidebar-section {
+      padding: .4rem 1rem .2rem;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: .5rem;
+    }
+    .nav-link-item {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .65rem 1.2rem;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 10px;
+      margin: .1rem .5rem;
+      font-size: .93rem;
+      font-weight: 500;
+      transition: all .18s;
+      position: relative;
+    }
+    .nav-link-item:hover { background: var(--green-pale); color: var(--green); }
+    .nav-link-item.active {
+      background: var(--green);
+      color: white;
+      font-weight: 600;
+    }
+    .nav-link-item i { font-size: 1.1rem; width: 20px; text-align: center; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--amber);
+      color: white;
+      font-size: .68rem;
+      padding: .1rem .45rem;
+      border-radius: 50px;
+      font-weight: 700;
+    }
+
+    /* ══ Main Content ══════════════════════════════════════════════════════ */
+    .main-content {
+      margin-top: var(--nav-h);
+      margin-left: var(--sidebar-w);
+      min-height: calc(100vh - var(--nav-h));
+      padding: 1.8rem;
+      transition: margin-left .3s;
+    }
+    .main-content.full { margin-left: 0; }
+
+    /* ══ Cards ═════════════════════════════════════════════════════════════ */
+    .k-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .k-card-header {
+      padding: .9rem 1.3rem;
+      display: flex; align-items: center; gap: .6rem;
+      font-family: 'Baloo 2', cursive;
+      font-weight: 700;
+      font-size: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .k-card-header.green  { background: var(--green); color: white; }
+    .k-card-header.amber  { background: var(--amber); color: white; }
+    .k-card-header.blue   { background: var(--blue);  color: white; }
+    .k-card-header.pale   { background: var(--green-pale); color: var(--green); }
+    .k-card-body { padding: 1.2rem; }
+
+    /* ══ Stat Cards ════════════════════════════════════════════════════════ */
+    .stat-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; gap: 1rem;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,.12); }
+    .stat-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .stat-val {
+      font-family: 'Baloo 2', cursive;
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stat-lbl { font-size: .78rem; color: var(--muted); margin-top: .2rem; font-weight: 500; }
+
+    /* ══ Buttons ═══════════════════════════════════════════════════════════ */
+    .btn-krishi {
+      background: linear-gradient(135deg, var(--green), var(--green-mid));
+      color: white; border: none;
+      border-radius: 10px;
+      font-family: 'Baloo 2', cursive;
+      font-size: 1rem; font-weight: 700;
+      padding: .65rem 1.5rem;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      display: inline-flex; align-items: center; gap: .5rem;
+    }
+    .btn-krishi:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,94,53,.4); color: white; }
+    .btn-krishi:disabled { opacity: .6; transform: none; cursor: not-allowed; }
+    .btn-amber { background: linear-gradient(135deg, #e67e22, #f39c12); }
+    .btn-amber:hover { box-shadow: 0 6px 20px rgba(230,126,34,.4); }
+    .btn-red { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+
+    /* ══ Forms ═════════════════════════════════════════════════════════════ */
+    .form-label {
+      font-size: .83rem; font-weight: 600;
+      color: var(--green); margin-bottom: .3rem;
+    }
+    .form-label .mr-label { font-size: .78rem; color: var(--muted); display: block; }
+    .form-control, .form-select {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: .93rem;
+      padding: .55rem .85rem;
+      transition: border-color .2s, box-shadow .2s;
+      background: #fff;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(46,125,82,.15);
+      outline: none;
+    }
+    .input-icon-wrap { position: relative; }
+    .input-icon-wrap .form-control { padding-left: 2.5rem; }
+    .input-icon-wrap .inp-icon {
+      position: absolute; left: .8rem; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted); font-size: 1rem;
+    }
+
+    /* ══ Risk Badges ═══════════════════════════════════════════════════════ */
+    .risk-Low    { background: #dcfce7; color: #166534; }
+    .risk-Medium { background: #fef3c7; color: #92400e; }
+    .risk-High   { background: #fee2e2; color: #991b1b; }
+    .risk-badge {
+      padding: .3rem .9rem; border-radius: 50px;
+      font-size: .8rem; font-weight: 700;
+      display: inline-block;
+    }
+
+    /* ══ Translator Sidebar ════════════════════════════════════════════════ */
+    .translator-panel {
+      position: fixed; right: -340px; top: var(--nav-h); bottom: 0;
+      width: 340px;
+      background: white;
+      box-shadow: -4px 0 20px rgba(0,0,0,.12);
+      z-index: 950;
+      transition: right .3s ease;
+      display: flex; flex-direction: column;
+    }
+    .translator-panel.open { right: 0; }
+    .translator-header {
+      background: var(--green);
+      color: white;
+      padding: 1rem 1.2rem;
+      font-family: 'Baloo 2', cursive;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .translator-body { flex: 1; overflow-y: auto; padding: 1rem; }
+    .trans-close {
+      background: none; border: none; color: white;
+      font-size: 1.3rem; cursor: pointer;
+    }
+    .trans-item {
+      padding: .65rem .9rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: .5rem;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .trans-item:hover { background: var(--green-pale); }
+    .trans-en { font-size: .82rem; color: var(--muted); }
+    .trans-mr { font-size: 1rem; font-family: 'Tiro Devanagari Marathi', serif; color: var(--green); font-weight: 600; }
+    .trans-search {
+      border: 1.5px solid var(--border); border-radius: 10px;
+      padding: .55rem .85rem; width: 100%; margin-bottom: .8rem;
+      font-size: .9rem;
+    }
+
+    /* Translator FAB */
+    .trans-fab {
+      position: fixed; right: 1.2rem; bottom: 5rem;
+      width: 52px; height: 52px;
+      background: var(--amber);
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(230,126,34,.5);
+      z-index: 940;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .2s;
+    }
+    .trans-fab:hover { transform: scale(1.1); }
+    .trans-fab-label {
+      position: fixed; right: 1.2rem; bottom: 4.4rem;
+      font-size: .68rem; color: var(--muted); text-align: center;
+      width: 52px; z-index: 940;
+    }
+
+    /* ══ Alerts ════════════════════════════════════════════════════════════ */
+    .alert {
+      border-radius: 10px;
+      border: none;
+      font-size: .9rem;
+      padding: .7rem 1rem;
+    }
+
+    /* ══ Tables ════════════════════════════════════════════════════════════ */
+    .k-table { width: 100%; border-collapse: collapse; }
+    .k-table th {
+      background: var(--green);
+      color: white;
+      padding: .7rem 1rem;
+      font-size: .82rem;
+      font-weight: 600;
+      text-align: left;
+    }
+    .k-table td { padding: .65rem 1rem; border-bottom: 1px solid var(--border); font-size: .88rem; }
+    .k-table tr:hover td { background: var(--green-pale); }
+    .k-table .best-row td { background: #f0fdf4; font-weight: 600; }
+    .k-table .best-row td:first-child::before { content: '★ '; color: var(--amber); }
+
+    /* ══ Page Header ═══════════════════════════════════════════════════════ */
+    .page-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .page-header h1 {
+      font-family: 'Baloo 2', cursive;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--green);
+    }
+    .page-header .subtitle { font-size: .88rem; color: var(--muted); margin-top: .2rem; }
+
+    /* ══ Mobile ════════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; padding: 1rem; }
+      .stat-val { font-size: 1.3rem; }
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,.4); z-index: 850;
+      }
+      .sidebar-overlay.show { display: block; }
+    }
+
+    /* ══ Animations ════════════════════════════════════════════════════════ */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn .4s ease forwards; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+    .loading-pulse { animation: pulse 1.2s ease infinite; }
+
+    /* ══ Spinner ═══════════════════════════════════════════════════════════ */
+    .spin { animation: spinning 1s linear infinite; }
+    @keyframes spinning { to { transform: rotate(360deg); } }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- ══ Topbar ════════════════════════════════════════════════════════════════ -->
+<nav class="topbar">
+  <button class="hamburger" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
+
+  <a href="/" class="topbar-brand">
+    🌿 Krishi<span>Advisor</span> AI
+  </a>
+
+  <div class="topbar-right">
+    <!-- Language Toggle -->
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btnMr" onclick="setLang('mr')">मराठी</button>
+      <button class="lang-btn" id="btnEn" onclick="setLang('en')">ENG</button>
+    </div>
+
+    {% if session.user_id %}
+    <a href="/dashboard" class="topbar-user text-decoration-none">
+      <span class="avatar-circle">{{ session.user_name[0] | upper }}</span>
+      <span class="d-none d-sm-inline">{{ session.user_name }}</span>
+    </a>
+    <a href="/logout" class="btn btn-sm btn-outline-light" style="border-radius:8px;font-size:.8rem;">
+      <i class="bi bi-box-arrow-right"></i>
+    </a>
+    {% else %}
+    <a href="/login" class="btn btn-sm btn-warning fw-bold" style="border-radius:8px;">
+      <i class="bi bi-person-circle me-1"></i>Login
+    </a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- ══ Sidebar ═══════════════════════════════════════════════════════════════ -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+
+  <div class="sidebar-section" data-mr="मुख्य" data-en="MAIN">मुख्य</div>
+
+  <a href="/" class="nav-link-item {% if request.path=='/' %}active{% endif %}">
+    <i class="bi bi-house-fill"></i>
+    <span data-mr="मुख्यपृष्ठ" data-en="Home">मुख्यपृष्ठ</span>
+  </a>
+
+  <a href="/advisor" class="nav-link-item {% if '/advisor' in request.path %}active{% endif %}">
+    <i class="bi bi-cpu-fill"></i>
+    <span data-mr="AI सल्लागार" data-en="AI Advisor">AI सल्लागार</span>
+    <span class="nav-badge">AI</span>
+  </a>
+
+  {% if session.user_id %}
+  <div class="sidebar-section" data-mr="शेतकरी" data-en="FARMER">शेतकरी</div>
+
+  <a href="/dashboard" class="nav-link-item {% if '/dashboard' in request.path %}active{% endif %}">
+    <i class="bi bi-speedometer2"></i>
+    <span data-mr="डॅशबोर्ड" data-en="Dashboard">डॅशबोर्ड</span>
+  </a>
+
+  <a href="/stock" class="nav-link-item {% if '/stock' in request.path %}active{% endif %}">
+    <i class="bi bi-boxes"></i>
+    <span data-mr="माल साठा" data-en="Stock">माल साठा</span>
+  </a>
+
+  <a href="/sales" class="nav-link-item {% if '/sales' in request.path %}active{% endif %}">
+    <i class="bi bi-receipt"></i>
+    <span data-mr="विक्री इतिहास" data-en="Sales History">विक्री इतिहास</span>
+  </a>
+
+  <a href="/profile" class="nav-link-item {% if '/profile' in request.path %}active{% endif %}">
+    <i class="bi bi-person-circle"></i>
+    <span data-mr="प्रोफाइल" data-en="Profile">प्रोफाइल</span>
+  </a>
+  {% else %}
+  <div class="sidebar-section" data-mr="खाते" data-en="ACCOUNT">खाते</div>
+  <a href="/register" class="nav-link-item">
+    <i class="bi bi-person-plus-fill"></i>
+    <span data-mr="नोंदणी करा" data-en="Register">नोंदणी करा</span>
+  </a>
+  <a href="/login" class="nav-link-item">
+    <i class="bi bi-box-arrow-in-right"></i>
+    <span data-mr="लॉगिन" data-en="Login">लॉगिन</span>
+  </a>
+  {% endif %}
+
+  <div class="sidebar-section" data-mr="इतर" data-en="OTHER">इतर</div>
+  <a href="/about" class="nav-link-item">
+    <i class="bi bi-info-circle"></i>
+    <span data-mr="आमच्याबद्दल" data-en="About">आमच्याबद्दल</span>
+  </a>
+</aside>
+
+<!-- ══ Flash Messages ══════════════════════════════════════════════════════ -->
+<div class="main-content {% if not session.user_id and request.path in ['/', '/advisor', '/about', '/login', '/register'] %}{% endif %}" id="mainContent">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{ 'success' if category=='success' else 'danger' if category=='danger' else 'warning' if category=='warning' else 'info' }} alert-dismissible fade show mb-3" role="alert">
+        <i class="bi bi-{% if category=='success' %}check-circle{% elif category=='danger' %}x-circle{% else %}info-circle{% endif %} me-2"></i>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</div>
+
+<!-- ══ Translator Panel ══════════════════════════════════════════════════════ -->
+<button class="trans-fab" onclick="toggleTranslator()" title="मराठी अनुवादक">
+  <i class="bi bi-translate"></i>
+</button>
+
+<div class="translator-panel" id="translatorPanel">
+  <div class="translator-header">
+    <span>🌐 मराठी ↔ English</span>
+    <button class="trans-close" onclick="toggleTranslator()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="translator-body">
+    <input type="text" class="trans-search" id="transSearch"
+           placeholder="शोधा / Search..." oninput="filterTranslations()"/>
+
+    <div id="transItems">
+      <!-- Agricultural Terms -->
+      <div class="trans-item" data-search="crop fasal">
+        <div class="trans-mr">पीक</div>
+        <div class="trans-en">Crop / Fasal</div>
+      </div>
+      <div class="trans-item" data-search="price bhav">
+        <div class="trans-mr">भाव / किंमत</div>
+        <div class="trans-en">Price / Market Rate</div>
+      </div>
+      <div class="trans-item" data-search="profit nafa">
+        <div class="trans-mr">नफा</div>
+        <div class="trans-en">Profit / Nafa</div>
+      </div>
+      <div class="trans-item" data-search="loss loss">
+        <div class="trans-mr">नुकसान</div>
+        <div class="trans-en">Loss</div>
+      </div>
+      <div class="trans-item" data-search="storage cold storage sathavane">
+        <div class="trans-mr">शीतगृह / साठवणूक</div>
+        <div class="trans-en">Cold Storage / Store</div>
+      </div>
+      <div class="trans-item" data-search="sell vikri">
+        <div class="trans-mr">विक्री</div>
+        <div class="trans-en">Sale / Selling</div>
+      </div>
+      <div class="trans-item" data-search="quantity pramaṇ">
+        <div class="trans-mr">प्रमाण / वजन</div>
+        <div class="trans-en">Quantity / Weight</div>
+      </div>
+      <div class="trans-item" data-search="transport vahatan">
+        <div class="trans-mr">वाहतूक खर्च</div>
+        <div class="trans-en">Transport Cost</div>
+      </div>
+      <div class="trans-item" data-search="production cost utpadana">
+        <div class="trans-mr">उत्पादन खर्च</div>
+        <div class="trans-en">Production Cost</div>
+      </div>
+      <div class="trans-item" data-search="spoilage kharab">
+        <div class="trans-mr">खराबी / नुकसान</div>
+        <div class="trans-en">Spoilage / Damage</div>
+      </div>
+      <div class="trans-item" data-search="harvest kapta">
+        <div class="trans-mr">कापणी</div>
+        <div class="trans-en">Harvest</div>
+      </div>
+      <div class="trans-item" data-search="market bazar">
+        <div class="trans-mr">बाजार / मंडई</div>
+        <div class="trans-en">Market / Mandi</div>
+      </div>
+      <div class="trans-item" data-search="prediction andaj">
+        <div class="trans-mr">अंदाज / भविष्यवाणी</div>
+        <div class="trans-en">Prediction / Forecast</div>
+      </div>
+      <div class="trans-item" data-search="risk jokhim">
+        <div class="trans-mr">जोखीम / धोका</div>
+        <div class="trans-en">Risk / Danger</div>
+      </div>
+      <div class="trans-item" data-search="process processing">
+        <div class="trans-mr">प्रक्रिया</div>
+        <div class="trans-en">Processing</div>
+      </div>
+      <div class="trans-item" data-search="onion kanda">
+        <div class="trans-mr">कांदा</div>
+        <div class="trans-en">Onion</div>
+      </div>
+      <div class="trans-item" data-search="mango amba">
+        <div class="trans-mr">आंबा</div>
+        <div class="trans-en">Mango</div>
+      </div>
+      <div class="trans-item" data-search="tomato tamatar">
+        <div class="trans-mr">टोमॅटो</div>
+        <div class="trans-en">Tomato</div>
+      </div>
+      <div class="trans-item" data-search="potato batata">
+        <div class="trans-mr">बटाटा</div>
+        <div class="trans-en">Potato</div>
+      </div>
+      <div class="trans-item" data-search="grapes draksha">
+        <div class="trans-mr">द्राक्षे</div>
+        <div class="trans-en">Grapes</div>
+      </div>
+      <div class="trans-item" data-search="wheat gahu">
+        <div class="trans-mr">गहू</div>
+        <div class="trans-en">Wheat</div>
+      </div>
+      <div class="trans-item" data-search="soybean soyabin">
+        <div class="trans-mr">सोयाबीन</div>
+        <div class="trans-en">Soybean</div>
+      </div>
+      <div class="trans-item" data-search="strategy dharana">
+        <div class="trans-mr">धोरण / उपाय</div>
+        <div class="trans-en">Strategy / Plan</div>
+      </div>
+      <div class="trans-item" data-search="revenue utpanna">
+        <div class="trans-mr">उत्पन्न</div>
+        <div class="trans-en">Revenue / Income</div>
+      </div>
+      <div class="trans-item" data-search="breakeven sampat">
+        <div class="trans-mr">खर्च किंमत</div>
+        <div class="trans-en">Break-Even Price</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// ── Sidebar Toggle ──────────────────────────────────────────────────────────
+function toggleSidebar() {
+  const sb  = document.getElementById('sidebar');
+  const ov  = document.getElementById('sidebarOverlay');
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    sb.classList.toggle('open');
+    ov.classList.toggle('show');
+  } else {
+    sb.classList.toggle('collapsed');
+    document.getElementById('mainContent').classList.toggle('full');
+  }
+}
+
+// ── Language Toggle ──────────────────────────────────────────────────────────
+let currentLang = localStorage.getItem('lang') || 'mr';
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  document.getElementById('btnMr').classList.toggle('active', lang === 'mr');
+  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+  document.querySelectorAll('[data-mr][data-en]').forEach(el => {
+    el.textContent = lang === 'mr' ? el.dataset.mr : el.dataset.en;
+  });
+}
+// Apply on load
+document.addEventListener('DOMContentLoaded', () => setLang(currentLang));
+
+// ── Translator Panel ─────────────────────────────────────────────────────────
+function toggleTranslator() {
+  document.getElementById('translatorPanel').classList.toggle('open');
+}
+function filterTranslations() {
+  const q = document.getElementById('transSearch').value.toLowerCase();
+  document.querySelectorAll('.trans-item').forEach(item => {
+    const txt = (item.textContent + item.dataset.search).toLowerCase();
+    item.style.display = txt.includes(q) ? '' : 'none';
+  });
+}
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

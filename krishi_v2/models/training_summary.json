@@ -1,0 +1,212 @@
+{
+  "banana": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.0265000458038085,
+    "r2": 0.9400432345143601,
+    "n_samples": 105
+  },
+  "brinjal": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.5037537225544375,
+    "r2": 0.883327214511533,
+    "n_samples": 105
+  },
+  "cabbage": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.274487374510153,
+    "r2": 0.8904940505752355,
+    "n_samples": 105
+  },
+  "carrot": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.8786307067392418,
+    "r2": 0.86792838725057,
+    "n_samples": 105
+  },
+  "cauliflower": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.9763062769538464,
+    "r2": 0.8858410042432532,
+    "n_samples": 105
+  },
+  "chilli": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 7.312889307779045,
+    "r2": 0.9267888952324627,
+    "n_samples": 105
+  },
+  "coconut": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 0.7410611854724429,
+    "r2": 0.9644448040304631,
+    "n_samples": 105
+  },
+  "cotton": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 3.4701286992374767,
+    "r2": 0.9611491898032436,
+    "n_samples": 105
+  },
+  "garlic": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 6.027045215265809,
+    "r2": 0.9215706027408284,
+    "n_samples": 105
+  },
+  "ginger": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 6.961838348498709,
+    "r2": 0.9048905876776461,
+    "n_samples": 105
+  },
+  "grapes": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 5.220191380982323,
+    "r2": 0.9264491124158635,
+    "n_samples": 105
+  },
+  "guava": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.8812473147716173,
+    "r2": 0.9322170335911872,
+    "n_samples": 105
+  },
+  "lemon": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 2.7466998380546217,
+    "r2": 0.9359272172337538,
+    "n_samples": 105
+  },
+  "mango": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 4.470627488968207,
+    "r2": 0.9259901895019991,
+    "n_samples": 105
+  },
+  "okra": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 2.0769537114520937,
+    "r2": 0.8903061281359549,
+    "n_samples": 105
+  },
+  "onion": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.8021063717101982,
+    "r2": 0.9515344074348286,
+    "n_samples": 105
+  },
+  "orange": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 2.7124671817532677,
+    "r2": 0.9381703470130031,
+    "n_samples": 105
+  },
+  "papaya": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 2.207075965668331,
+    "r2": 0.9182723612452487,
+    "n_samples": 105
+  },
+  "peas": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 3.1907511363838603,
+    "r2": 0.8976849477912557,
+    "n_samples": 105
+  },
+  "pomegranate": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 5.503497502595489,
+    "r2": 0.9354089839297108,
+    "n_samples": 105
+  },
+  "potato": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 0.7222195363918033,
+    "r2": 0.9303629550434942,
+    "n_samples": 105
+  },
+  "radish": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.1372943426845095,
+    "r2": 0.8991710849092545,
+    "n_samples": 105
+  },
+  "soybean": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.914728200714574,
+    "r2": 0.9634460136733801,
+    "n_samples": 105
+  },
+  "spinach": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.5517360247314318,
+    "r2": 0.8618397889137751,
+    "n_samples": 105
+  },
+  "strawberry": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 14.138649523657781,
+    "r2": 0.8767069422868291,
+    "n_samples": 105
+  },
+  "sugarcane": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 0.052874328728146305,
+    "r2": 0.9915454062258134,
+    "n_samples": 105
+  },
+  "tomato": {
+    "status": "ok",
+    "model": "RandomForest",
+    "mae_cv": 2.6158998625928214,
+    "r2": 0.9427883015683632,
+    "n_samples": 105
+  },
+  "turmeric": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 7.4001887789881255,
+    "r2": 0.9314750031776053,
+    "n_samples": 105
+  },
+  "watermelon": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 1.066361014243736,
+    "r2": 0.8892531503981935,
+    "n_samples": 105
+  },
+  "wheat": {
+    "status": "ok",
+    "model": "Ridge",
+    "mae_cv": 0.7370037887529104,
+    "r2": 0.9684604672283981,
+    "n_samples": 105
+  }
+}
