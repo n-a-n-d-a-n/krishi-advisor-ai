@@ -231,7 +231,7 @@ Returns all 30 supported crops with Marathi names.
 
 ## 👥 Team
 
-Built by team Harvest Helions of 4 as a Hackathon prototype — Maharashtra, India · March 2026
+Built by team Harvest Helions(Dev Lohiya, Harish Panpaliya, Radhyeshyam Lahoti, Nandan Kabra) of 4 as a Hackathon prototype - Maharashtra, India · March 2026
 
 ---
 
