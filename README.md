@@ -32,7 +32,7 @@ Indian farmers lose **30–40% of potential income** due to poor timing of crop 
 
 - 🤖 **AI Price Prediction** - 30 crop-specific ensemble ML models (Gradient Boosting + Random Forest + Ridge) trained on 25 years of Maharashtra price data (2000–2024)
 - 📊 **Strategy Comparison** - Ranks Sell Now / Store 1–4 months / Partial / Process strategies by profit, ROI, and risk
-- 🦠 **Crop-Specific Spoilage Model** — Real post-harvest spoilage rates per crop (ICAR/NHB data), compound decay, and storage-type awareness (home / warehouse / cold chain)
+- 🦠 **Crop-Specific Spoilage Model** - Real post-harvest spoilage rates per crop (ICAR/NHB data), compound decay, and storage-type awareness (home / warehouse / cold chain)
 - 🌐 **Bilingual UI** — Full Marathi + English interface throughout
 - 🧑‍🌾 **Farm Management** — Stock tracking, sales history, profit dashboard
 - 🔌 **REST API** — `/api/predict` endpoint for integration with mobile apps or WhatsApp bots
