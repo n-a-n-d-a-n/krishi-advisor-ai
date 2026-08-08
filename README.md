@@ -237,7 +237,7 @@ Built by team Harvest Helions(Dev Lohiya, Harish Panpaliya, Radhyeshyam Lahoti, 
 
 ## 📄 License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
