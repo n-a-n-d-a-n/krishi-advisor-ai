@@ -182,7 +182,7 @@ python app.py
 
 Open `http://localhost:5000`
 
-> Pre-trained models are included — no need to retrain.
+> Pre-trained models are included - no need to retrain.
 
 ---
 
