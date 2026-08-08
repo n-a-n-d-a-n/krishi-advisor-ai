@@ -24,7 +24,7 @@
 
 Indian farmers lose **30–40% of potential income** due to poor timing of crop sales and lack of market intelligence. They make sell/store decisions based on hearsay, not data - with no bilingual tool accessible to Marathi-speaking farmers.
 
-**KrishiAdvisor AI solves this** by predicting crop prices up to 4 months ahead and recommending the single best strategy - Sell Now, Store, or Process — to maximise farm profit.
+**KrishiAdvisor AI solves this** by predicting crop prices up to 4 months ahead and recommending the single best strategy - Sell Now, Store, or Process - to maximise farm profit.
 
 ---
 
