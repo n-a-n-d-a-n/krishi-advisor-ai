@@ -86,7 +86,7 @@ Unlike naive models that use last month's price (lag-1), KrishiAdvisor uses **sa
 | Onion | 0.9358 | 13.79% |
 | Tomato | 0.7709 | 27.55%* |
 
-*Tomato is India's most volatile crop — swings ₹5 to ₹160/kg within weeks.
+*Tomato is India's most volatile crop swings ₹5 to ₹160/kg within weeks.
 
 </details>
 
