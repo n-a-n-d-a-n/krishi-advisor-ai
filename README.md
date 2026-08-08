@@ -47,7 +47,7 @@ Each of the **30 crop-specific models** is a weighted ensemble:
 Final Price = 0.55 × GradientBoosting + 0.35 × RandomForest + 0.10 × Ridge
 ```
 
-### Key Innovation — Year-over-Year (YoY) Feature Engineering
+### Key Innovation - Year-over-Year (YoY) Feature Engineering
 
 Unlike naive models that use last month's price (lag-1), KrishiAdvisor uses **same-month-last-year** as its primary predictor — because June's price this year is best predicted from June last year, not from May this year.
 
