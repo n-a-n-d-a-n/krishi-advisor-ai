@@ -1,4 +1,4 @@
-# 🌾 KrishiAdvisor AI — कृषी सल्लागार
+# 🌾 KrishiAdvisor AI - कृषी सल्लागार
 
 > **AI-powered crop price prediction & farm profit optimization for Maharashtra farmers**
 > Built as a Hackathon Prototype · Team of 4 · March 2026
