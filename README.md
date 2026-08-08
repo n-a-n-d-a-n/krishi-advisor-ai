@@ -244,6 +244,6 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## 🙏 Data Sources
 
 - [AGMARKNET](https://agmarknet.gov.in) - Maharashtra APMC market price patterns
-- [NHB Horticulture Statistics](https://nhb.gov.in) — baseline data
+- [NHB Horticulture Statistics](https://nhb.gov.in) - baseline data
 - [ICAR CIPHET](https://ciphet.in) — post-harvest spoilage benchmarks
 - [IMD](https://imd.gov.in) — monsoon seasonal patterns
