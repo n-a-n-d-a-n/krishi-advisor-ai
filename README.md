@@ -35,7 +35,7 @@ Indian farmers lose **30–40% of potential income** due to poor timing of crop 
 - 🦠 **Crop-Specific Spoilage Model** - Real post-harvest spoilage rates per crop (ICAR/NHB data), compound decay, and storage-type awareness (home / warehouse / cold chain)
 - 🌐 **Bilingual UI** - Full Marathi + English interface throughout
 - 🧑‍🌾 **Farm Management** - Stock tracking, sales history, profit dashboard
-- 🔌 **REST API** — `/api/predict` endpoint for integration with mobile apps or WhatsApp bots
+- 🔌 **REST API** - `/api/predict` endpoint for integration with mobile apps or WhatsApp bots
 
 ---
 
