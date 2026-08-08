@@ -16,7 +16,7 @@
 
 **[https://krishi-advisor-ai.onrender.com](https://krishi-advisor-ai.onrender.com)**
 
-> Note: Hosted on Render free tier — may take 30–60 seconds to wake up on first visit.
+> Note: Hosted on Render free tier - may take 30–60 seconds to wake up on first visit.
 
 ---
 
